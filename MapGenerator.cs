@@ -15,7 +15,7 @@ using UnityEngine;
 
 public class MapGenerator : MonoBehaviour
 {
-    [SerializeField, Range(1, 16), Header("Recommended: 8")]
+    [SerializeField, Range(1, 24), Header("Recommended: 8")]
     private int mapSize = 8;
 
     [SerializeField, Range(0, 100), Header("Recommended: 66")]
@@ -226,21 +226,16 @@ public class MapGenerator : MonoBehaviour
                                 // only creates mesh where blocks exist
                                 if (map[x, y, z] == 1)
                                 {
-                                    // adds vertices corresponding to block position
-                                    vertices.Add(new Vector3(x, y, z));             // 0
-                                    vertices.Add(new Vector3(x, y + 1, z));         // 1
-                                    vertices.Add(new Vector3(x, y + 1, z + 1));     // 2
-                                    vertices.Add(new Vector3(x, y, z + 1));         // 3
-                                    vertices.Add(new Vector3(x + 1, y, z + 1));     // 4
-                                    vertices.Add(new Vector3(x + 1, y + 1, z + 1)); // 5
-                                    vertices.Add(new Vector3(x + 1, y + 1, z));     // 6
-                                    vertices.Add(new Vector3(x + 1, y, z));         // 7
-
                                     // checks if x face is drawn
                                     if (x - 1 >= 0)
                                     {
                                         if (map[x - 1, y, z] == 0)
                                         {
+                                            vertices.Add(new Vector3(x, y, z));             // 0
+                                            vertices.Add(new Vector3(x, y + 1, z));         // 1
+                                            vertices.Add(new Vector3(x, y + 1, z + 1));     // 2
+                                            vertices.Add(new Vector3(x, y, z + 1));         // 3
+
                                             triangles.Add(i + 2);   // -x
                                             triangles.Add(i + 1);
                                             triangles.Add(i);
@@ -248,6 +243,8 @@ public class MapGenerator : MonoBehaviour
                                             triangles.Add(i);       // -x
                                             triangles.Add(i + 3);
                                             triangles.Add(i + 2);
+
+                                            i += 4; // new vertice index
                                         }
                                     }
 
@@ -255,13 +252,20 @@ public class MapGenerator : MonoBehaviour
                                     {
                                         if (map[x + 1, y, z] == 0)
                                         {
-                                            triangles.Add(i + 7);   // x
-                                            triangles.Add(i + 6);
-                                            triangles.Add(i + 5);
+                                            vertices.Add(new Vector3(x + 1, y, z + 1));     // 0
+                                            vertices.Add(new Vector3(x + 1, y + 1, z + 1)); // 1
+                                            vertices.Add(new Vector3(x + 1, y + 1, z));     // 2
+                                            vertices.Add(new Vector3(x + 1, y, z));         // 3
 
-                                            triangles.Add(i + 5);   // x
-                                            triangles.Add(i + 4);
-                                            triangles.Add(i + 7);
+                                            triangles.Add(i + 3);   // x
+                                            triangles.Add(i + 2);
+                                            triangles.Add(i + 1);
+
+                                            triangles.Add(i + 1);   // x
+                                            triangles.Add(i);
+                                            triangles.Add(i + 3);
+
+                                            i += 4; // new vertice index
                                         }
                                     }
 
@@ -270,13 +274,20 @@ public class MapGenerator : MonoBehaviour
                                     {
                                         if (map[x, y - 1, z] == 0)
                                         {
-                                            triangles.Add(i + 3);   // -y
-                                            triangles.Add(i);
-                                            triangles.Add(i + 7);
+                                            vertices.Add(new Vector3(x, y, z));             // 0
+                                            vertices.Add(new Vector3(x, y, z + 1));         // 1
+                                            vertices.Add(new Vector3(x + 1, y, z + 1));     // 2
+                                            vertices.Add(new Vector3(x + 1, y, z));         // 3
 
-                                            triangles.Add(i + 7);   // -y
-                                            triangles.Add(i + 4);
+                                            triangles.Add(i + 1);   // -y
+                                            triangles.Add(i);
                                             triangles.Add(i + 3);
+
+                                            triangles.Add(i + 3);   // -y
+                                            triangles.Add(i + 2);
+                                            triangles.Add(i + 1);
+
+                                            i += 4; // new vertice index
                                         }
                                     }
 
@@ -284,13 +295,20 @@ public class MapGenerator : MonoBehaviour
                                     {
                                         if (map[x, y + 1, z] == 0)
                                         {
-                                            triangles.Add(i + 2);   // y
-                                            triangles.Add(i + 5);
-                                            triangles.Add(i + 6);
+                                            vertices.Add(new Vector3(x, y + 1, z));         // 0
+                                            vertices.Add(new Vector3(x, y + 1, z + 1));     // 1
+                                            vertices.Add(new Vector3(x + 1, y + 1, z + 1)); // 2
+                                            vertices.Add(new Vector3(x + 1, y + 1, z));     // 3
 
-                                            triangles.Add(i + 6);   // y
-                                            triangles.Add(i + 1);
+                                            triangles.Add(i + 1);   // y
                                             triangles.Add(i + 2);
+                                            triangles.Add(i + 3);
+
+                                            triangles.Add(i + 3);   // y
+                                            triangles.Add(i);
+                                            triangles.Add(i + 1);
+
+                                            i += 4; // new vertice index
                                         }
                                     }
 
@@ -299,13 +317,20 @@ public class MapGenerator : MonoBehaviour
                                     {
                                         if (map[x, y, z + 1] == 0)
                                         {
+                                            vertices.Add(new Vector3(x, y + 1, z + 1));     // 0
+                                            vertices.Add(new Vector3(x, y, z + 1));         // 1
+                                            vertices.Add(new Vector3(x + 1, y, z + 1));     // 2
+                                            vertices.Add(new Vector3(x + 1, y + 1, z + 1)); // 3
+
+                                            triangles.Add(i);   // z
+                                            triangles.Add(i + 1);
+                                            triangles.Add(i + 2);
+
                                             triangles.Add(i + 2);   // z
                                             triangles.Add(i + 3);
-                                            triangles.Add(i + 4);
+                                            triangles.Add(i);
 
-                                            triangles.Add(i + 4);   // z
-                                            triangles.Add(i + 5);
-                                            triangles.Add(i + 2);
+                                            i += 4; // new vertice index
                                         }
                                     }
 
@@ -313,18 +338,22 @@ public class MapGenerator : MonoBehaviour
                                     {
                                         if (map[x, y, z - 1] == 0)
                                         {
+                                            vertices.Add(new Vector3(x, y, z));             // 0
+                                            vertices.Add(new Vector3(x, y + 1, z));         // 1
+                                            vertices.Add(new Vector3(x + 1, y + 1, z));     // 2
+                                            vertices.Add(new Vector3(x + 1, y, z));         // 3
 
-                                            triangles.Add(i + 7);   // -z
+                                            triangles.Add(i + 3);   // -z
                                             triangles.Add(i);
                                             triangles.Add(i + 1);
 
                                             triangles.Add(i + 1);   // -z
-                                            triangles.Add(i + 6);
-                                            triangles.Add(i + 7);
+                                            triangles.Add(i + 2);
+                                            triangles.Add(i + 3);
+
+                                            i += 4; // new vertice index
                                         }
                                     }
-
-                                    i += 8; // new vertice index
                                 }
                             }
                         }
@@ -377,6 +406,11 @@ public class MapGenerator : MonoBehaviour
                 {
                     for (int nz = -1; nz < 2; nz++)
                     {
+                        if (Mathf.Abs(nx) + Mathf.Abs(ny) + Mathf.Abs(nz) != 1)
+                        {
+                            continue;
+                        }
+
                         if (map[a + nx, b + ny, c + nz] == 0)
                         {
                             list.Add(new Vector3Int(a + nx, b + ny, c + nz));
